@@ -8,14 +8,23 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 /**
- *
+ * REST service to allow checking status or closing the door remotely
  */
 public class GarageDoorWebService
 {
+	/**
+	 * port for server to run on
+	 */
 	private static final int kPort = Integer.getInteger("server.port", 80);
 
+	/**
+	 * Path to check status
+	 */
 	private static final String kStatusPath = System.getProperty("status.path", "/Status");
 
+	/**
+	 * Path to close the door
+	 */
 	private static final String kClosePath = System.getProperty("status.path", "/Close");
 
 	private GarageDoorActionService myActionService;
@@ -33,6 +42,9 @@ public class GarageDoorWebService
 		aServer.start();
 	}
 
+	/**
+	 * Check the status of the door
+	 */
 	private class StatusHandler implements HttpHandler
 	{
 		public void handle(HttpExchange theExchange) throws IOException
@@ -45,6 +57,9 @@ public class GarageDoorWebService
 		}
 	}
 
+	/**
+	 * Close the door
+	 */
 	private class CloseHandler implements HttpHandler
 	{
 		public void handle(HttpExchange theExchange) throws IOException

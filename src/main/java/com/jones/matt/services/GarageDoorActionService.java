@@ -6,7 +6,8 @@ import com.jones.matt.events.GarageDoorOpenEvent;
 import com.jones.matt.events.GarageDoorOpenHandler;
 
 /**
- *
+ * Service to open or close the garage door by interfacing with Raspberry Pi's GPIO and
+ * a relay wired to the door opener
  */
 public class GarageDoorActionService
 {

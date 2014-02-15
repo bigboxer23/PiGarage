@@ -7,7 +7,8 @@ import com.jones.matt.services.GarageDoorWebService;
 import java.io.IOException;
 
 /**
- *
+ * Main class, creates services for status, action, and web, then iterates doing nothing
+ * to keep everything alive.
  */
 public class GarageDoorController extends IterateThread
 {
