@@ -5,6 +5,10 @@ import com.jones.matt.services.GarageDoorStatusService;
 import com.jones.matt.services.GarageDoorWebService;
 
 import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Main class, creates services for status, action, and web, then iterates doing nothing
@@ -12,6 +16,8 @@ import java.io.IOException;
  */
 public class GarageDoorController extends IterateThread
 {
+	private static Logger myLogger = Logger.getLogger("com.jones");
+
 	public static void main(String[] theArgs) throws IOException
 	{
 		new GarageDoorController();
@@ -19,6 +25,7 @@ public class GarageDoorController extends IterateThread
 
 	public GarageDoorController() throws IOException
 	{
+		setupLogger();
 		GarageDoorStatusService aStatusService = new GarageDoorStatusService();
 		GarageDoorActionService anActionService = new GarageDoorActionService();
 		aStatusService.setActionService(anActionService);
@@ -32,5 +39,13 @@ public class GarageDoorController extends IterateThread
 	public void iterate()
 	{
 		//Do nothing, just keeping everything alive
+	}
+
+	private void setupLogger() throws IOException
+	{
+		FileHandler aHandler = new FileHandler(System.getProperty("log.location", "/home/pi/garage/logs/piGarage.log"), true);
+		aHandler.setFormatter(new SimpleFormatter());
+		myLogger.addHandler(aHandler);
+		myLogger.setLevel(Level.parse(System.getProperty("log.level", "INFO")));
 	}
 }

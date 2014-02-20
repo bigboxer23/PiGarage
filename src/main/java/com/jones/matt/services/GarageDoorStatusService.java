@@ -12,6 +12,7 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Service to monitor the status of the garage door.
@@ -21,10 +22,12 @@ import java.util.List;
  */
 public class GarageDoorStatusService extends IterateThread
 {
+	private static Logger myLogger = Logger.getLogger("com.jones.GarageDoorStatusService");
+
 	/**
 	 * Time to wait before closing
 	 */
-	public static final long kAutoCloseDelay = 1000 * 60 * 10;//ms * seconds * minutes -> 10 Minutes
+	public static final long kAutoCloseDelay = Integer.getInteger("close.delay", 1000 * 60 * 10);//ms * seconds * minutes -> 10 Minutes
 
 	/**
 	 * Last time the door was detected open
@@ -53,20 +56,22 @@ public class GarageDoorStatusService extends IterateThread
 			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent theEvent)
 			{
 				myOpenTime = isGarageDoorOpen() ? System.currentTimeMillis() : -1;
-				System.out.println("GarageDoorStatusService:" + (isGarageDoorOpen() ? "Garage Door Opened." : "Garage Door Closed."));
+				myLogger.info(isGarageDoorOpen() ? "Garage Door Opened." : "Garage Door Closed.");
 			}
 		});
 		if(isGarageDoorOpen())
 		{
 			myOpenTime = System.currentTimeMillis();
 		}
-		System.out.println("GarageDoorStatusService Startup:" + (isGarageDoorOpen() ? "Garage Door Opened." : "Garage Door Closed."));
+		myLogger.warning("GarageDoorStatusService Startup:" + (isGarageDoorOpen() ? "Garage Door Opened." : "Garage Door Closed."));
 		start();
 	}
 
 	public boolean isGarageDoorOpen()
 	{
-		return !myStatusPin.getState().isHigh();
+		boolean anIsOpen = !myStatusPin.getState().isHigh();
+		myLogger.info("Garage is " + (anIsOpen ? "Open" : "Closed"));
+		return anIsOpen;
 	}
 
 	/**
@@ -77,6 +82,7 @@ public class GarageDoorStatusService extends IterateThread
 	{
 		if(myOpenTime > 0 && (System.currentTimeMillis() - myOpenTime) > kAutoCloseDelay)
 		{
+			myLogger.warning("Garage has been open too long, closing.");
 			myOpenTime = System.currentTimeMillis();
 			myActionService.closeDoor();
 		}

@@ -7,11 +7,15 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.logging.Logger;
+
 /**
  * REST service to allow checking status or closing the door remotely
  */
 public class GarageDoorWebService
 {
+	private static Logger myLogger = Logger.getLogger("com.jones.GarageDoorWebService");
+
 	/**
 	 * port for server to run on
 	 */
@@ -33,6 +37,7 @@ public class GarageDoorWebService
 
 	public GarageDoorWebService(GarageDoorStatusService theStatusService, GarageDoorActionService theDoorActionService) throws IOException
 	{
+		myLogger.warning("Starting web service");
 		myStatusService = theStatusService;
 		myActionService = theDoorActionService;
 		HttpServer aServer = HttpServer.create(new InetSocketAddress(kPort), 0);
@@ -49,6 +54,7 @@ public class GarageDoorWebService
 	{
 		public void handle(HttpExchange theExchange) throws IOException
 		{
+			myLogger.info("Checking status requested");
 			String aResponse = myStatusService.isGarageDoorOpen() + "";
 			theExchange.sendResponseHeaders(200, aResponse.length());
 			OutputStream anOutputStream = theExchange.getResponseBody();
@@ -64,6 +70,7 @@ public class GarageDoorWebService
 	{
 		public void handle(HttpExchange theExchange) throws IOException
 		{
+			myLogger.info("Closing door requested");
 			myActionService.closeDoor();
 			String aResponse = "Closing";
 			theExchange.sendResponseHeaders(200, aResponse.length());
