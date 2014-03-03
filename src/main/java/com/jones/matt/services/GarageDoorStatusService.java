@@ -1,17 +1,11 @@
 package com.jones.matt.services;
 
 import com.jones.matt.IterateThread;
-import com.jones.matt.events.GarageDoorCloseHandler;
-import com.jones.matt.events.GarageDoorOpenHandler;
-import com.jones.matt.events.HasGarageDoorCloseEvents;
-import com.jones.matt.events.HasGarageDoorOpenEvents;
+import com.jones.matt.util.GPIOUtils;
 import com.pi4j.io.gpio.*;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
-import com.pi4j.io.gpio.event.GpioPinListener;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -23,6 +17,11 @@ import java.util.logging.Logger;
 public class GarageDoorStatusService extends IterateThread
 {
 	private static Logger myLogger = Logger.getLogger("com.jones.GarageDoorStatusService");
+
+	/**
+	 * Pin to use for status
+	 */
+	private static final Pin kStatusPin = GPIOUtils.getPin(Integer.getInteger("GPIO.status.pin", 2));
 
 	/**
 	 * Time to wait before closing
@@ -44,7 +43,7 @@ public class GarageDoorStatusService extends IterateThread
 	public GarageDoorStatusService()
 	{
 		GpioController aGPIOFactory = GpioFactory.getInstance();
-		myStatusPin = aGPIOFactory.provisionDigitalInputPin(RaspiPin.GPIO_02, PinPullResistance.PULL_DOWN);
+		myStatusPin = aGPIOFactory.provisionDigitalInputPin(kStatusPin, PinPullResistance.PULL_DOWN);
 		myStatusPin.addListener(new GpioPinListenerDigital()
 		{
 			/**
@@ -56,7 +55,7 @@ public class GarageDoorStatusService extends IterateThread
 			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent theEvent)
 			{
 				myOpenTime = isGarageDoorOpen() ? System.currentTimeMillis() : -1;
-				myLogger.info(isGarageDoorOpen() ? "Garage Door Opened." : "Garage Door Closed.");
+				myLogger.config(isGarageDoorOpen() ? "Garage Door Opened." : "Garage Door Closed.");
 			}
 		});
 		if(isGarageDoorOpen())

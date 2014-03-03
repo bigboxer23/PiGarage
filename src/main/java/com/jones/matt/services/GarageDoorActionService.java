@@ -1,9 +1,7 @@
 package com.jones.matt.services;
 
-import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.PinState;
-import com.pi4j.io.gpio.RaspiPin;
+import com.jones.matt.util.GPIOUtils;
+import com.pi4j.io.gpio.*;
 
 import java.util.logging.Logger;
 
@@ -20,13 +18,18 @@ public class GarageDoorActionService
 	private GpioPinDigitalOutput myPinTrigger;
 
 	/**
+	 * Pin to use for triggering actions
+	 */
+	private static final Pin kActionPin = GPIOUtils.getPin(Integer.getInteger("GPIO.action.pin", 7));
+
+	/**
 	 * The delay between the "press" and the "let go"
 	 */
 	public static final int kTriggerDelay = Integer.getInteger("triggerDelay", 400);
 
 	public GarageDoorActionService()
 	{
-		myPinTrigger = GpioFactory.getInstance().provisionDigitalOutputPin(RaspiPin.GPIO_07, "MyLED", PinState.HIGH);
+		myPinTrigger = GpioFactory.getInstance().provisionDigitalOutputPin(kActionPin, "MyActionPin", PinState.HIGH);
 	}
 
 	/**
