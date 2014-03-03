@@ -6,6 +6,10 @@ and a relay used to open/close the door.  It will trigger the garage door to clo
 left open.  Additionally, it runs a small webserver which has REST service urls to trigger closing/opening the door
 and checking status.
 
+Ties together these two projects:<br>
+<a href="http://www.instructables.com/id/Raspberry-Pi-Garage-Door-Opener/?ALLSTEPS">Magnetic Sensor</a><br>
+<a href="https://www.richlynch.com/2013/07/27/pi_garage_alert_1/">Opener</a><br><br>
+
 Wiring devices to the pi<br>
 Sensor for status<br>
 	<a href="http://www.smarthome.com/7455/Seco-Larm-SM-226L-Garage-Door-Contacts-for-Closed-Circuits/p.aspx">Seco-Larm SM-226L</a><br>
