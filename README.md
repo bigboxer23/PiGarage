@@ -6,6 +6,8 @@ and a relay used to open/close the door.  It will trigger the garage door to clo
 left open.  Additionally, it runs a small webserver which has REST service urls to trigger closing/opening the door
 and checking status.
 
+Wiring devices to the pi<br>
+test
 
 There are multiple configurable properties that can be set at runtime:
 log.location: Path to the file to log information about opener status, actions, etc.
