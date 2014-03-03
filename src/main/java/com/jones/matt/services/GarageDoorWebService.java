@@ -29,7 +29,9 @@ public class GarageDoorWebService
 	/**
 	 * Path to close the door
 	 */
-	private static final String kClosePath = System.getProperty("status.path", "/Close");
+	private static final String kClosePath = System.getProperty("close.path", "/Close");
+
+	private static final String kOpenPath = System.getProperty("open.path", "/Open");
 
 	private GarageDoorActionService myActionService;
 
@@ -43,6 +45,7 @@ public class GarageDoorWebService
 		HttpServer aServer = HttpServer.create(new InetSocketAddress(kPort), 0);
 		aServer.createContext(kStatusPath, new StatusHandler());
 		aServer.createContext(kClosePath, new CloseHandler());
+		aServer.createContext(kOpenPath, new OpenHandler());
 		aServer.setExecutor(null); // creates a default executor
 		aServer.start();
 	}
@@ -73,6 +76,20 @@ public class GarageDoorWebService
 			myLogger.info("Closing door requested");
 			myActionService.closeDoor();
 			String aResponse = "Closing";
+			theExchange.sendResponseHeaders(200, aResponse.length());
+			OutputStream anOutputStream = theExchange.getResponseBody();
+			anOutputStream.write(aResponse.getBytes());
+			anOutputStream.close();
+		}
+	}
+
+	private class OpenHandler implements HttpHandler
+	{
+		public void handle(HttpExchange theExchange) throws IOException
+		{
+			myLogger.info("Opening door requested");
+			myActionService.openDoor();
+			String aResponse = "Opening";
 			theExchange.sendResponseHeaders(200, aResponse.length());
 			OutputStream anOutputStream = theExchange.getResponseBody();
 			anOutputStream.write(aResponse.getBytes());

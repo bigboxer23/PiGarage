@@ -46,6 +46,6 @@ public class GarageDoorController extends IterateThread
 		FileHandler aHandler = new FileHandler(System.getProperty("log.location", "/home/pi/garage/logs/piGarage.log"), true);
 		aHandler.setFormatter(new SimpleFormatter());
 		myLogger.addHandler(aHandler);
-		myLogger.setLevel(Level.parse(System.getProperty("log.level", "INFO")));
+		myLogger.setLevel(Level.parse(System.getProperty("log.level", "WARNING")));
 	}
 }

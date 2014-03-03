@@ -1,9 +1,5 @@
 package com.jones.matt.services;
 
-import com.jones.matt.events.GarageDoorCloseEvent;
-import com.jones.matt.events.GarageDoorCloseHandler;
-import com.jones.matt.events.GarageDoorOpenEvent;
-import com.jones.matt.events.GarageDoorOpenHandler;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
@@ -33,11 +29,36 @@ public class GarageDoorActionService
 		myPinTrigger = GpioFactory.getInstance().provisionDigitalOutputPin(RaspiPin.GPIO_07, "MyLED", PinState.HIGH);
 	}
 
+	/**
+	 * Close the door if it is open
+	 */
 	public void closeDoor()
 	{
 		if(myStatusService.isGarageDoorOpen())
 		{
 			myLogger.warning("Closing the door.");
+			doDoorAction();
+		}
+	}
+
+	/**
+	 * Open the door if it is already closed
+	 */
+	public void openDoor()
+	{
+		if(!myStatusService.isGarageDoorOpen())
+		{
+			myLogger.warning("Opening the door.");
+			doDoorAction();
+		}
+	}
+
+	/**
+	 * Trigger the opener to toggle the current state.  There
+	 * is no status check with this method.
+	 */
+	private void doDoorAction()
+	{
 			myPinTrigger.low();
 			try
 			{
@@ -45,9 +66,7 @@ public class GarageDoorActionService
 			}
 			catch (InterruptedException e){}
 			myPinTrigger.high();
-		}
 	}
-
 	public void setStatusService(GarageDoorStatusService theStatusService)
 	{
 		myStatusService = theStatusService;
