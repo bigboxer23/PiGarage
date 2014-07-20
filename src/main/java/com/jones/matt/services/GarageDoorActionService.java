@@ -39,7 +39,7 @@ public class GarageDoorActionService
 	{
 		if(myStatusService.isGarageDoorOpen())
 		{
-			myLogger.warning("Closing the door.");
+			myLogger.config("Closing the door.");
 			doDoorAction();
 		}
 	}
@@ -51,7 +51,7 @@ public class GarageDoorActionService
 	{
 		if(!myStatusService.isGarageDoorOpen())
 		{
-			myLogger.warning("Opening the door.");
+			myLogger.config("Opening the door.");
 			doDoorAction();
 		}
 	}

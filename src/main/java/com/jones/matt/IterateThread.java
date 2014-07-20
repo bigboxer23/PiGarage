@@ -1,11 +1,15 @@
 package com.jones.matt;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * This class spawns a thread and uses it to call the iterate method over and over
  * delaying by the amount specified by the iterate delay variable.  Default is two seconds.
  */
 public abstract class IterateThread implements Runnable
 {
+	private static Logger myLogger = Logger.getLogger("com.jones.IterateThread");
 
 	/**
 	 * Default delay
@@ -19,14 +23,17 @@ public abstract class IterateThread implements Runnable
 	{
 		while(myIsStarted)
 		{
-			iterate();
 			try
 			{
+				iterate();
 				Thread.sleep(myIterateDelay);
 			}
 			catch (InterruptedException e)
 			{
 				e.printStackTrace();
+			} catch (Exception e)
+			{
+				myLogger.log(Level.WARNING, "IterateThread:", e);
 			}
 		}
 	}

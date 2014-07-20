@@ -3,7 +3,7 @@
 	<property name="pi.host.dev" value="rp2"/>
 	<property name="pi.port.dev" value="22"/>
 	<property name="pi.user.dev" value="pi"/>
-	<property name="pi.password.dev" value=""/>
+	<property name="pi.password.dev" value="${password}"/>
 	<property name="pi.dirCopyTo.dev" value="~/garage"/>
 	<property name="project.build.finalName" value="Garage.jar"/>
 

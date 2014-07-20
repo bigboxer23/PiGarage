@@ -47,15 +47,26 @@ public class GarageDoorStatusService extends IterateThread
 		myStatusPin.addListener(new GpioPinListenerDigital()
 		{
 			/**
-			 * Listen for status changes
+			 * Listen for status changes.  These can apparently trigger multiple times even
+			 * when the status isn't really changing, so we use the open time as our gauge for "last"
+			 * status, and don't set close status (or open) unless we're moving from the opposite
+			 * state.
 			 *
 			 * @param theEvent
 			 */
 			@Override
 			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent theEvent)
 			{
-				myOpenTime = isGarageDoorOpen() ? System.currentTimeMillis() : -1;
-				myLogger.config(isGarageDoorOpen() ? "Garage Door Opened." : "Garage Door Closed.");
+				if(isGarageDoorOpen() && myOpenTime < 0)
+				{
+					myOpenTime = System.currentTimeMillis();
+					myLogger.warning("Garage Door Opened.");
+				}
+				if(!isGarageDoorOpen() && myOpenTime != -1)
+				{
+					myOpenTime = -1;
+					myLogger.warning("Garage Door Closed.");
+				}
 			}
 		});
 		if(isGarageDoorOpen())
