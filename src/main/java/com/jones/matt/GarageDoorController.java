@@ -1,6 +1,7 @@
 package com.jones.matt;
 
 import com.jones.matt.services.GarageDoorActionService;
+import com.jones.matt.services.GarageDoorMotionService;
 import com.jones.matt.services.GarageDoorStatusService;
 import com.jones.matt.services.GarageDoorWebService;
 
@@ -26,8 +27,10 @@ public class GarageDoorController extends IterateThread
 	public GarageDoorController() throws IOException
 	{
 		setupLogger();
+		GarageDoorMotionService aMotionService = new GarageDoorMotionService();
 		GarageDoorStatusService aStatusService = new GarageDoorStatusService();
 		GarageDoorActionService anActionService = new GarageDoorActionService();
+		aMotionService.setStatusService(aStatusService);
 		aStatusService.setActionService(anActionService);
 		anActionService.setStatusService(aStatusService);
 		new GarageDoorWebService(aStatusService, anActionService);

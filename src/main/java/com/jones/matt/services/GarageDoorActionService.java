@@ -70,6 +70,7 @@ public class GarageDoorActionService
 			catch (InterruptedException e){}
 			myPinTrigger.high();
 	}
+
 	public void setStatusService(GarageDoorStatusService theStatusService)
 	{
 		myStatusService = theStatusService;

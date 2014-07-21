@@ -77,6 +77,12 @@ public class GarageDoorStatusService extends IterateThread
 		start();
 	}
 
+	public void resetOpenTime()
+	{
+		myLogger.warning("Resetting open time");
+		myOpenTime = System.currentTimeMillis();
+	}
+
 	public boolean isGarageDoorOpen()
 	{
 		boolean anIsOpen = !myStatusPin.getState().isHigh();
