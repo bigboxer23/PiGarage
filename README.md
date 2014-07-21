@@ -12,12 +12,16 @@ Ties together these two projects:<br>
 <a href="https://www.richlynch.com/2013/07/27/pi_garage_alert_1/">Opener</a><br><br>
 
 Wiring devices to the pi<br>
-Sensor for status<br>
+Sensor for status:<br>
 	<a href="http://www.smarthome.com/7455/Seco-Larm-SM-226L-Garage-Door-Contacts-for-Closed-Circuits/p.aspx">Seco-Larm SM-226L</a><br>
 This is wired to Pin 9 and 13 (GPIO 2 by default).<br><br>
 
+SSR:<br>
+<a href="http://www.amazon.com/gp/product/B00E0NTPP4/ref=ox_ya_os_product_refresh_T1">Solid State Relay</a><br>
 The solid state relay is wired to ground on pin 6, 5v on pin 2, and GPIO 7 on pin 7 by default<br><br>
 
+Motion Sensor:<br>
+<a href="http://www.elecfreaks.com/wiki/index.php?title=PIR_Motion_Sensor_Module:DYP-ME003">PIR_Motion_Sensor_Module:DYP-ME003</a><br>
 The motion sensor wired up to GPIO3 (pin 15), 5v (pin 2), grd (pin 6)<br><br>
 
 There are multiple configurable properties that can be set at runtime:<br>
