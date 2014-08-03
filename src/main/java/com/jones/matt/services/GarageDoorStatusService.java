@@ -79,7 +79,7 @@ public class GarageDoorStatusService extends IterateThread
 
 	public void resetOpenTime()
 	{
-		if(isGarageDoorOpen() && myOpenTime < 0)
+		if(isGarageDoorOpen() && myOpenTime > 0)
 		{
 			myLogger.warning("Resetting open time");
 			myOpenTime = System.currentTimeMillis();
