@@ -1,5 +1,6 @@
 package com.jones.matt.services;
 
+import com.jones.matt.GarageDoorController;
 import com.jones.matt.util.GPIOUtils;
 import com.pi4j.io.gpio.*;
 
@@ -9,11 +10,9 @@ import java.util.logging.Logger;
  * Service to open or close the garage door by interfacing with Raspberry Pi's GPIO and
  * a relay wired to the door opener
  */
-public class GarageDoorActionService
+public class GarageDoorActionService extends BaseService
 {
 	private static Logger myLogger = Logger.getLogger("com.jones.GarageDoorActionService");
-
-	private GarageDoorStatusService myStatusService;
 
 	private GpioPinDigitalOutput myPinTrigger;
 
@@ -27,8 +26,9 @@ public class GarageDoorActionService
 	 */
 	public static final int kTriggerDelay = Integer.getInteger("triggerDelay", 400);
 
-	public GarageDoorActionService()
+	public GarageDoorActionService(GarageDoorController theController)
 	{
+		super(theController);
 		myPinTrigger = GpioFactory.getInstance().provisionDigitalOutputPin(kActionPin, "MyActionPin", PinState.HIGH);
 	}
 
@@ -37,7 +37,7 @@ public class GarageDoorActionService
 	 */
 	public void closeDoor()
 	{
-		if(myStatusService.isGarageDoorOpen())
+		if(getController().getStatusService().isGarageDoorOpen())
 		{
 			myLogger.config("Closing the door.");
 			doDoorAction();
@@ -49,7 +49,7 @@ public class GarageDoorActionService
 	 */
 	public void openDoor()
 	{
-		if(!myStatusService.isGarageDoorOpen())
+		if(!getController().getStatusService().isGarageDoorOpen())
 		{
 			myLogger.config("Opening the door.");
 			doDoorAction();
@@ -69,10 +69,5 @@ public class GarageDoorActionService
 			}
 			catch (InterruptedException e){}
 			myPinTrigger.high();
-	}
-
-	public void setStatusService(GarageDoorStatusService theStatusService)
-	{
-		myStatusService = theStatusService;
 	}
 }

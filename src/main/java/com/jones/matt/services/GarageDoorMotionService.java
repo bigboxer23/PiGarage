@@ -1,5 +1,6 @@
 package com.jones.matt.services;
 
+import com.jones.matt.GarageDoorController;
 import com.jones.matt.util.GPIOUtils;
 import com.pi4j.io.gpio.*;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
  * Listens for state change (meaning motion) and tells the status service to reset its auto
  * close timer (we're actively in the garage working on something)
  */
-public class GarageDoorMotionService
+public class GarageDoorMotionService extends BaseService
 {
 	private static Logger myLogger = Logger.getLogger("com.jones.GarageDoorMotionService");
 
@@ -28,15 +29,14 @@ public class GarageDoorMotionService
 
 	private GpioPinDigitalInput myStatusPin;
 
-	private GarageDoorStatusService myStatusService;
-
 	/**
 	 * Last time we've detected motion
 	 */
 	private long myLastTime = -1;
 
-	public GarageDoorMotionService()
+	public GarageDoorMotionService(GarageDoorController theController)
 	{
+		super(theController);
 		GpioController aGPIOFactory = GpioFactory.getInstance();
 		myStatusPin = aGPIOFactory.provisionDigitalInputPin(kMotionPin, PinPullResistance.PULL_DOWN);
 		myStatusPin.addListener(new GpioPinListenerDigital()
@@ -54,7 +54,7 @@ public class GarageDoorMotionService
 				{
 					myLastTime = System.currentTimeMillis();
 					myLogger.warning("Motion detected!");
-					myStatusService.resetOpenTime();
+					getController().getStatusService().resetOpenTime();
 				}
 			}
 		});
@@ -63,10 +63,5 @@ public class GarageDoorMotionService
 	public boolean isMotionDetected()
 	{
 		return myStatusPin.getState().isHigh();
-	}
-
-	public void setStatusService(GarageDoorStatusService theStatusService)
-	{
-		myStatusService = theStatusService;
 	}
 }

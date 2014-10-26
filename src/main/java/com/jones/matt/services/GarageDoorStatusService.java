@@ -1,5 +1,6 @@
 package com.jones.matt.services;
 
+import com.jones.matt.GarageDoorController;
 import com.jones.matt.IterateThread;
 import com.jones.matt.util.GPIOUtils;
 import com.pi4j.io.gpio.*;
@@ -38,10 +39,11 @@ public class GarageDoorStatusService extends IterateThread
 	 */
 	private GpioPinDigitalInput myStatusPin;
 
-	private GarageDoorActionService myActionService;
+	private GarageDoorController myController;
 
-	public GarageDoorStatusService()
+	public GarageDoorStatusService(GarageDoorController theController)
 	{
+		myController = theController;
 		GpioController aGPIOFactory = GpioFactory.getInstance();
 		myStatusPin = aGPIOFactory.provisionDigitalInputPin(kStatusPin, PinPullResistance.PULL_DOWN);
 		myStatusPin.addListener(new GpioPinListenerDigital()
@@ -103,12 +105,7 @@ public class GarageDoorStatusService extends IterateThread
 		{
 			myLogger.warning("Garage has been open too long, closing.");
 			myOpenTime = System.currentTimeMillis();
-			myActionService.closeDoor();
+			myController.getActionService().closeDoor();
 		}
-	}
-
-	public void setActionService(GarageDoorActionService theActionService)
-	{
-		myActionService = theActionService;
 	}
 }

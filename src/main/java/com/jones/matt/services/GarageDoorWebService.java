@@ -1,5 +1,6 @@
 package com.jones.matt.services;
 
+import com.jones.matt.GarageDoorController;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
 /**
  * REST service to allow checking status or closing the door remotely
  */
-public class GarageDoorWebService
+public class GarageDoorWebService extends BaseService
 {
 	private static Logger myLogger = Logger.getLogger("com.jones.GarageDoorWebService");
 
@@ -33,19 +34,17 @@ public class GarageDoorWebService
 
 	private static final String kOpenPath = System.getProperty("open.path", "/Open");
 
-	private GarageDoorActionService myActionService;
+	private static final String kWeatherPath = System.getProperty("weather.path", "/Weather");
 
-	private GarageDoorStatusService myStatusService;
-
-	public GarageDoorWebService(GarageDoorStatusService theStatusService, GarageDoorActionService theDoorActionService) throws IOException
+	public GarageDoorWebService(GarageDoorController theController) throws IOException
 	{
+		super(theController);
 		myLogger.warning("Starting web service");
-		myStatusService = theStatusService;
-		myActionService = theDoorActionService;
 		HttpServer aServer = HttpServer.create(new InetSocketAddress(kPort), 0);
 		aServer.createContext(kStatusPath, new StatusHandler());
 		aServer.createContext(kClosePath, new CloseHandler());
 		aServer.createContext(kOpenPath, new OpenHandler());
+		aServer.createContext(kWeatherPath, new WeatherHandler());
 		aServer.setExecutor(null); // creates a default executor
 		aServer.start();
 	}
@@ -53,45 +52,62 @@ public class GarageDoorWebService
 	/**
 	 * Check the status of the door
 	 */
-	private class StatusHandler implements HttpHandler
+	private class StatusHandler extends BaseHandler
 	{
-		public void handle(HttpExchange theExchange) throws IOException
+		@Override
+		public String getResponse()
 		{
 			myLogger.info("Checking status requested");
-			String aResponse = myStatusService.isGarageDoorOpen() + "";
-			theExchange.sendResponseHeaders(200, aResponse.length());
-			OutputStream anOutputStream = theExchange.getResponseBody();
-			anOutputStream.write(aResponse.getBytes());
-			anOutputStream.close();
+			return getController().getStatusService().isGarageDoorOpen() + "";
+		}
+	}
+
+	private class WeatherHandler extends BaseHandler
+	{
+		@Override
+		public String getResponse()
+		{
+			myLogger.info("Checking Weather requested");
+			return "{temperature:" + getController().getWeatherService().getTemperature()
+					+ ",humidity:" + getController().getWeatherService().getHumidity() + "}";
 		}
 	}
 
 	/**
 	 * Close the door
 	 */
-	private class CloseHandler implements HttpHandler
+	private class CloseHandler extends BaseHandler
 	{
-		public void handle(HttpExchange theExchange) throws IOException
+		@Override
+		public String getResponse()
 		{
 			myLogger.info("Closing door requested");
-			myActionService.closeDoor();
-			String aResponse = "Closing";
-			theExchange.sendResponseHeaders(200, aResponse.length());
-			OutputStream anOutputStream = theExchange.getResponseBody();
-			anOutputStream.write(aResponse.getBytes());
-			anOutputStream.close();
+			getController().getActionService().closeDoor();
+			return "\"Closing\"";
 		}
 	}
 
-	private class OpenHandler implements HttpHandler
+	private class OpenHandler extends BaseHandler
 	{
-		public void handle(HttpExchange theExchange) throws IOException
+		@Override
+		public String getResponse()
 		{
 			myLogger.info("Opening door requested");
-			myActionService.openDoor();
-			String aResponse = "Opening";
-			theExchange.sendResponseHeaders(200, aResponse.length());
-			OutputStream anOutputStream = theExchange.getResponseBody();
+			getController().getActionService().openDoor();
+			return "\"Opening\"";
+		}
+	}
+
+	private abstract class BaseHandler implements HttpHandler
+	{
+		public abstract String getResponse();
+
+		@Override
+		public final void handle(HttpExchange theHttpExchange) throws IOException
+		{
+			String aResponse = getResponse();
+			theHttpExchange.sendResponseHeaders(200, aResponse.length());
+			OutputStream anOutputStream = theHttpExchange.getResponseBody();
 			anOutputStream.write(aResponse.getBytes());
 			anOutputStream.close();
 		}

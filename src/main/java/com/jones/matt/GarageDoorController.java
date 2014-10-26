@@ -1,9 +1,6 @@
 package com.jones.matt;
 
-import com.jones.matt.services.GarageDoorActionService;
-import com.jones.matt.services.GarageDoorMotionService;
-import com.jones.matt.services.GarageDoorStatusService;
-import com.jones.matt.services.GarageDoorWebService;
+import com.jones.matt.services.*;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -19,21 +16,29 @@ public class GarageDoorController extends IterateThread
 {
 	private static Logger myLogger = Logger.getLogger("com.jones");
 
+	private GarageDoorMotionService myMotionService;
+
+	private GarageDoorStatusService myStatusService;
+
+	private GarageDoorActionService myActionService;
+
+	private GarageDoorWebService myWebService;
+
+	private WeatherService myWeatherService;
+
 	public static void main(String[] theArgs) throws IOException
 	{
 		new GarageDoorController();
 	}
 
-	public GarageDoorController() throws IOException
+	private GarageDoorController() throws IOException
 	{
 		setupLogger();
-		GarageDoorMotionService aMotionService = new GarageDoorMotionService();
-		GarageDoorStatusService aStatusService = new GarageDoorStatusService();
-		GarageDoorActionService anActionService = new GarageDoorActionService();
-		aMotionService.setStatusService(aStatusService);
-		aStatusService.setActionService(anActionService);
-		anActionService.setStatusService(aStatusService);
-		new GarageDoorWebService(aStatusService, anActionService);
+		myMotionService = new GarageDoorMotionService(this);
+		myStatusService = new GarageDoorStatusService(this);
+		myActionService = new GarageDoorActionService(this);
+		myWebService = new GarageDoorWebService(this);
+		myWeatherService = new WeatherService(this);
 
 		start();
 	}
@@ -50,5 +55,30 @@ public class GarageDoorController extends IterateThread
 		aHandler.setFormatter(new SimpleFormatter());
 		myLogger.addHandler(aHandler);
 		myLogger.setLevel(Level.parse(System.getProperty("log.level", "WARNING")));
+	}
+
+	public GarageDoorMotionService getMotionService()
+	{
+		return myMotionService;
+	}
+
+	public GarageDoorStatusService getStatusService()
+	{
+		return myStatusService;
+	}
+
+	public GarageDoorActionService getActionService()
+	{
+		return myActionService;
+	}
+
+	public GarageDoorWebService getWebService()
+	{
+		return myWebService;
+	}
+
+	public WeatherService getWeatherService()
+	{
+		return myWeatherService;
 	}
 }

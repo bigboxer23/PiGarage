@@ -5,7 +5,7 @@ This project runs on a raspberry pi.  It utilizes GPIO pins to track status of a
 and a relay used to open/close the door.  It will trigger the garage door to close after a defined amount of time being
 left open.  Additionally, it runs a small webserver which has REST service urls to trigger closing/opening the door
 and checking status.  Additionally there's a dyp-me003 motion sensor wired up to reset the auto close timeout if motion
-detected.
+detected.  A temperature and humidity sensor can be attached to allow measurements to be fetched via REST url
 
 Ties together these two projects:<br>
 <a href="http://www.instructables.com/id/Raspberry-Pi-Garage-Door-Opener/?ALLSTEPS">Magnetic Sensor</a><br>
@@ -24,14 +24,26 @@ Motion Sensor:<br>
 <a href="http://www.elecfreaks.com/wiki/index.php?title=PIR_Motion_Sensor_Module:DYP-ME003">PIR_Motion_Sensor_Module:DYP-ME003</a><br>
 The motion sensor wired up to GPIO3 (pin 15), 5v (pin 2), grd (pin 6)<br><br>
 
+Temperature/Humidity Sensor (DHT22):<br>
+<a href="ftp://imall.iteadstudio.com/Sensor/IM120712007/DS_IM120712007.pdf">DHT22</a><br>
+The temperature/humidity sensor wired up to GPIO10 (non Pi4J) (pin 10), 3.3v (pin 17), grd (pin 25)<br>
+Note:  This sensor requires the adafruit dht driver be installed in a path accessible location.<br>
+Example:<br>
+git clone git://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code.git<br>
+cd Adafruit-Raspberry-Pi-Python-Code/Adafruit_DHT_Driver<br>
+sudo cp Adafruit_DHT /usr/bin<br>
+<br><br>
+
 There are multiple configurable properties that can be set at runtime:<br>
 log.location: Path to the file to log information about opener status, actions, etc.<br>
 status.path: URL to get status from (default is "/Status")<br>
 close.path: URL to close garage door (default is "/Close")<br>
+weather.path: URL to get temperature from (default is "/Weather")<br>
 open.path: URL to open garage door (default is "/Open")<br>
 close.delay: Number of milliseconds before closing the door once it's detected open (default is 10 minutes)<br>
 triggerDelay: How long to leave the switch active before turning off (how long you press the physical button) (default is 400ms)<br>
-GPIO.status.pin: Pin to use for the magnetic sensor (default is GPIO 2, pin 9)<br>
+GPIO.status.pin: Pin to use for the magnetic sensor (default is GPIO 2, pin 13)<br>
 GPIO.action.pin: Pin to use for the solid state relay (default is GPIO 7, pin 7)<br>
-GPIO.motion.pin: Pin to use for the motion sensor (default is GPIO 3, pin 15)
+GPIO.motion.pin: Pin to use for the motion sensor (default is GPIO 3, pin 15)<br>
+GPIO.temp.pin: Pin to use for the temperature sensor (default is GPIO (non Pi4J) 10, pin 19)
 
