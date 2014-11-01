@@ -8,6 +8,8 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -68,8 +70,7 @@ public class GarageDoorWebService extends BaseService
 		public String getResponse()
 		{
 			myLogger.info("Checking Weather requested");
-			return "{temperature:" + getController().getWeatherService().getTemperature()
-					+ ",humidity:" + getController().getWeatherService().getHumidity() + "}";
+			return "{\"temperature\":" + getController().getWeatherService().getTemperature() + ",\"humidity\":" + getController().getWeatherService().getHumidity() + "}";
 		}
 	}
 
@@ -105,11 +106,42 @@ public class GarageDoorWebService extends BaseService
 		@Override
 		public final void handle(HttpExchange theHttpExchange) throws IOException
 		{
-			String aResponse = getResponse();
+			String aResponse = generateCallback(theHttpExchange, getResponse());
 			theHttpExchange.sendResponseHeaders(200, aResponse.length());
 			OutputStream anOutputStream = theHttpExchange.getResponseBody();
 			anOutputStream.write(aResponse.getBytes());
 			anOutputStream.close();
 		}
+	}
+
+	private String generateCallback(HttpExchange theHttpExchange, String theResponse)
+	{
+		Map<String, String> aParams = queryToMap(theHttpExchange.getRequestURI().getQuery());
+		if (aParams.containsKey("callback"))
+		{
+			theResponse = aParams.get("callback") + "(" + theResponse + ");";
+		}
+		return theResponse;
+	}
+
+	private Map<String, String> queryToMap(String theQuery)
+	{
+		Map<String, String> aResult = new HashMap<>();
+		if (theQuery != null)
+		{
+			for (String aParam : theQuery.split("&"))
+			{
+				String aPair[] = aParam.split("=");
+				if (aPair.length > 1)
+				{
+					aResult.put(aPair[0], aPair[1]);
+				}
+				else
+				{
+					aResult.put(aPair[0], "");
+				}
+			}
+		}
+		return aResult;
 	}
 }
