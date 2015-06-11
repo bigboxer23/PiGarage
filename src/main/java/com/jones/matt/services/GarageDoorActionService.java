@@ -12,8 +12,6 @@ import java.util.logging.Logger;
  */
 public class GarageDoorActionService extends BaseService
 {
-	private static Logger myLogger = Logger.getLogger("com.jones.GarageDoorActionService");
-
 	private GpioPinDigitalOutput myPinTrigger;
 
 	/**
@@ -41,6 +39,7 @@ public class GarageDoorActionService extends BaseService
 		{
 			myLogger.config("Closing the door.");
 			doDoorAction();
+			getController().getCommunicationService().garageDoorClosed();
 		}
 	}
 
@@ -53,6 +52,7 @@ public class GarageDoorActionService extends BaseService
 		{
 			myLogger.config("Opening the door.");
 			doDoorAction();
+			getController().getCommunicationService().garageDoorOpened();
 		}
 	}
 

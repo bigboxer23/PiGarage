@@ -10,15 +10,12 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * REST service to allow checking status or closing the door remotely
  */
 public class GarageDoorWebService extends BaseService
 {
-	private static Logger myLogger = Logger.getLogger("com.jones.GarageDoorWebService");
-
 	/**
 	 * port for server to run on
 	 */

@@ -6,8 +6,6 @@ import com.pi4j.io.gpio.*;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
-import java.util.logging.Logger;
-
 /**
  * Sensor wired up to GPIO3 (pin 15), 5v (pin 2), grd (pin 6)
  * Listens for state change (meaning motion) and tells the status service to reset its auto
@@ -15,8 +13,6 @@ import java.util.logging.Logger;
  */
 public class GarageDoorMotionService extends BaseService
 {
-	private static Logger myLogger = Logger.getLogger("com.jones.GarageDoorMotionService");
-
 	/**
 	 * Pin to use for status
 	 */

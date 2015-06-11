@@ -11,6 +11,7 @@
 		<pathelement location="../lib/pi4j-core-0.0.5.jar"/>
 		<pathelement location="../lib/pi4j-device-0.0.5.jar"/>
 		<pathelement location="../lib/pi4j-gpio-extension-0.0.5.jar"/>
+		<pathelement location="../lib/guava-18.0.jar"/>
 	</path>
 	<target name="compile">
 		<mkdir dir="../classes" />
@@ -30,6 +31,7 @@
 		<scp file="../lib/pi4j-core-0.0.5.jar" todir="${pi.user.dev}:${pi.password.dev}@${pi.host.dev}:${pi.dirCopyTo.dev}/lib" port="${pi.port.dev}" trust="true" verbose="true" failonerror="true"></scp>
 		<scp file="../lib/pi4j-device-0.0.5.jar" todir="${pi.user.dev}:${pi.password.dev}@${pi.host.dev}:${pi.dirCopyTo.dev}/lib" port="${pi.port.dev}" trust="true" verbose="true" failonerror="true"></scp>
 		<scp file="../lib/pi4j-gpio-extension-0.0.5.jar" todir="${pi.user.dev}:${pi.password.dev}@${pi.host.dev}:${pi.dirCopyTo.dev}/lib" port="${pi.port.dev}" trust="true" verbose="true" failonerror="true"></scp>
+		<scp file="../lib/guava-18.0.jar" todir="${pi.user.dev}:${pi.password.dev}@${pi.host.dev}:${pi.dirCopyTo.dev}/lib" port="${pi.port.dev}" trust="true" verbose="true" failonerror="true"></scp>
 	</target>
 
 	<target name="deploy_to_pi" depends="Garage.jar">

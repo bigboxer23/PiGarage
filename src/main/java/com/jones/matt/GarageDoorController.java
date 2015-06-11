@@ -26,6 +26,8 @@ public class GarageDoorController extends IterateThread
 
 	private WeatherService myWeatherService;
 
+	private CommunicationService myCommunicationService;
+
 	public static void main(String[] theArgs) throws IOException
 	{
 		new GarageDoorController();
@@ -38,6 +40,7 @@ public class GarageDoorController extends IterateThread
 		myStatusService = new GarageDoorStatusService(this);
 		myActionService = new GarageDoorActionService(this);
 		myWebService = new GarageDoorWebService(this);
+		myCommunicationService = new CommunicationService(this);
 		myWeatherService = new WeatherService(this);
 
 		start();
@@ -80,5 +83,10 @@ public class GarageDoorController extends IterateThread
 	public WeatherService getWeatherService()
 	{
 		return myWeatherService;
+	}
+
+	public CommunicationService getCommunicationService()
+	{
+		return myCommunicationService;
 	}
 }
