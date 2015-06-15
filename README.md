@@ -47,3 +47,13 @@ GPIO.action.pin: Pin to use for the solid state relay (default is GPIO 7, pin 7)
 GPIO.motion.pin: Pin to use for the motion sensor (default is GPIO 3, pin 15)<br>
 GPIO.temp.pin: Pin to use for the temperature sensor (default is GPIO (non Pi4J) 10, pin 19)
 
+
+Setup on pi:
+create a new file at /etc/init.d called garageStartup
+copy the following into the file
+
+#! /bin/bash
+cd /home/pi
+java -jar garage/Garage.jar
+
+set executable (chmod 755)
