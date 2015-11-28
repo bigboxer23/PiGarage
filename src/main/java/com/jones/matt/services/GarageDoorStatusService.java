@@ -61,7 +61,7 @@ public class GarageDoorStatusService extends IterateThread
 			{
 				if(isGarageDoorOpen() && myOpenTime < 0)
 				{
-					myOpenTime = System.currentTimeMillis();
+					myOpenTime = System.currentTimeMillis() + kAutoCloseDelay;
 					myLogger.warning("Garage Door Opened.");
 				}
 				if(!isGarageDoorOpen() && myOpenTime != -1)
@@ -73,7 +73,7 @@ public class GarageDoorStatusService extends IterateThread
 		});
 		if(isGarageDoorOpen())
 		{
-			myOpenTime = System.currentTimeMillis();
+			myOpenTime = System.currentTimeMillis() + kAutoCloseDelay;
 		}
 		myLogger.warning("GarageDoorStatusService Startup:" + (isGarageDoorOpen() ? "Garage Door Opened." : "Garage Door Closed."));
 		start();
@@ -81,10 +81,10 @@ public class GarageDoorStatusService extends IterateThread
 
 	public void resetOpenTime()
 	{
-		if(isGarageDoorOpen() && myOpenTime > 0)
+		if(isGarageDoorOpen() && myOpenTime > 0 && (myOpenTime - System.currentTimeMillis()) < kAutoCloseDelay)
 		{
 			myLogger.warning("Resetting open time");
-			myOpenTime = System.currentTimeMillis();
+			myOpenTime = System.currentTimeMillis() + kAutoCloseDelay;
 		}
 	}
 
@@ -96,15 +96,24 @@ public class GarageDoorStatusService extends IterateThread
 	}
 
 	/**
+	 * Set the auto close time forward 10x the normal wait, so won't close for a long while
+	 */
+	public void disableAutoClose()
+	{
+		myLogger.warning("disabling auto close.");
+		myOpenTime = System.currentTimeMillis() + (10 * kAutoCloseDelay);
+	}
+
+	/**
 	 * Check if we're open and if we've been opened too long.  If so, use the action service to close the door.
 	 */
 	@Override
 	public void iterate()
 	{
-		if(myOpenTime > 0 && (System.currentTimeMillis() - myOpenTime) > kAutoCloseDelay)
+		if(myOpenTime > 0 && (System.currentTimeMillis() - myOpenTime) > 0)
 		{
 			myLogger.warning("Garage has been open too long, closing.");
-			myOpenTime = System.currentTimeMillis();
+			myOpenTime = System.currentTimeMillis() + kAutoCloseDelay;
 			myController.getActionService().closeDoor();
 		}
 	}

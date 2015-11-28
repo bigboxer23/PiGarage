@@ -1,9 +1,9 @@
 <project name="Garage" default="Garage.jar" basedir=".">
-
-	<property name="pi.host.dev" value="rp2"/>
+	<loadproperties srcFile="default.properties"/>
+	<property name="pi.host.dev" value="${pi.host.dev}"/>
 	<property name="pi.port.dev" value="22"/>
 	<property name="pi.user.dev" value="pi"/>
-	<property name="pi.password.dev" value="${password}"/>
+	<property name="pi.password.dev" value="${pi.password.dev}"/>
 	<property name="pi.dirCopyTo.dev" value="~/garage"/>
 	<property name="project.build.finalName" value="Garage.jar"/>
 

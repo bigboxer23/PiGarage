@@ -26,6 +26,10 @@ public class GarageDoorWebService extends BaseService
 	 */
 	private static final String kStatusPath = System.getProperty("status.path", "/Status");
 
+	private static final String kStatus2Path = System.getProperty("status.path", "/Status2");
+
+	private static final String kDisableAutoClosePath = System.getProperty("status.path", "/DisableAutoClose");
+
 	/**
 	 * Path to close the door
 	 */
@@ -44,13 +48,38 @@ public class GarageDoorWebService extends BaseService
 		aServer.createContext(kClosePath, new CloseHandler());
 		aServer.createContext(kOpenPath, new OpenHandler());
 		aServer.createContext(kWeatherPath, new WeatherHandler());
+		aServer.createContext(kStatus2Path, new Status2Handler());
+		aServer.createContext(kDisableAutoClosePath, new AutoCloseHandler());
 		aServer.setExecutor(null); // creates a default executor
 		aServer.start();
+	}
+
+	private class AutoCloseHandler extends BaseHandler
+	{
+		@Override
+		public String getResponse()
+		{
+			getController().getStatusService().disableAutoClose();
+			return "DisablingAutoClose";
+		}
+	}
+
+	private class Status2Handler extends BaseHandler
+	{
+		@Override
+		public String getResponse()
+		{
+			myLogger.info("Checking status requested");
+			return "{\"temperature\":" + getController().getWeatherService().getTemperature()
+					+ ",\"humidity\":" + getController().getWeatherService().getHumidity() +
+					",\"door\":" + getController().getStatusService().isGarageDoorOpen() + "}";
+		}
 	}
 
 	/**
 	 * Check the status of the door
 	 */
+	@Deprecated
 	private class StatusHandler extends BaseHandler
 	{
 		@Override
@@ -61,6 +90,7 @@ public class GarageDoorWebService extends BaseService
 		}
 	}
 
+	@Deprecated
 	private class WeatherHandler extends BaseHandler
 	{
 		@Override
