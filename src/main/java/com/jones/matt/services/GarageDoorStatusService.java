@@ -88,6 +88,16 @@ public class GarageDoorStatusService extends IterateThread
 		}
 	}
 
+	/**
+	 * Get the amount of time before auto close happens
+	 *
+	 * @return milliseconds until auto close happens
+	 */
+	public long getAutoCloseTimeRemaining()
+	{
+		return myOpenTime > 0 ? (myOpenTime - System.currentTimeMillis()) : 0;
+	}
+
 	public boolean isGarageDoorOpen()
 	{
 		boolean anIsOpen = !myStatusPin.getState().isHigh();

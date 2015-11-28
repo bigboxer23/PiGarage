@@ -2,6 +2,8 @@ package com.jones.matt.sensors;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Wrapper around the adafruit driver to return temp and humidity from
@@ -9,6 +11,8 @@ import java.io.InputStreamReader;
  */
 public class DHT22Sensor
 {
+	private static Logger myLogger = Logger.getLogger("com.jones.DHT22Sensor");
+
 	private final static String kTemp = "Temp =";
 	private final static String kHumidity = "Hum =";
 	private static final long kPollingInterval = 3000;
@@ -76,18 +80,19 @@ public class DHT22Sensor
 		String aResult = "";
 		try
 		{
+			myLogger.warning("Reading value from sensor");
 			Process aProcess = Runtime.getRuntime().exec(String.format("Adafruit_DHT 22 %d", myPin));
 			BufferedReader aReader = new BufferedReader(new InputStreamReader(aProcess.getInputStream()));
 			String aLine = null;
 			while ((aLine = aReader.readLine()) != null)
 			{
+				myLogger.warning("reading line: " + aLine);
 				aResult += aLine;
 			}
 		}
 		catch (Exception theException)
 		{
-			System.err.println(String.format("Could not read the DHT22 sensor at pin %d", myPin));
-			theException.printStackTrace();
+			myLogger.log(Level.WARNING, String.format("Could not read the DHT22 sensor at pin %d", myPin), theException);
 			return null;
 		}
 		return aResult;

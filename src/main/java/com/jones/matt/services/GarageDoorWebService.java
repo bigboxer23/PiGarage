@@ -72,7 +72,8 @@ public class GarageDoorWebService extends BaseService
 			myLogger.info("Checking status requested");
 			return "{\"temperature\":" + getController().getWeatherService().getTemperature()
 					+ ",\"humidity\":" + getController().getWeatherService().getHumidity() +
-					",\"door\":" + getController().getStatusService().isGarageDoorOpen() + "}";
+					",\"door\":" + getController().getStatusService().isGarageDoorOpen() +
+					",\"autoClose\":" + getController().getStatusService().getAutoCloseTimeRemaining() + "}";
 		}
 	}
 
