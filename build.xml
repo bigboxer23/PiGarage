@@ -8,9 +8,9 @@
 	<property name="project.build.finalName" value="Garage.jar"/>
 
 	<path id="compile.classpath">
-		<pathelement location="lib/pi4j-core-0.0.5.jar"/>
-		<pathelement location="lib/pi4j-device-0.0.5.jar"/>
-		<pathelement location="lib/pi4j-gpio-extension-0.0.5.jar"/>
+		<pathelement location="lib/pi4j-core.jar"/>
+		<pathelement location="lib/pi4j-device.jar"/>
+		<pathelement location="lib/pi4j-gpio-extension.jar"/>
 		<pathelement location="lib/guava-18.0.jar"/>
 	</path>
 	<target name="compile">
@@ -22,15 +22,15 @@
 		<jar basedir="classes" includes="**/*.class, META-INF/*" jarfile="Garage.jar">
 			<manifest>
 				<attribute name="Main-Class" value="com.jones.matt.GarageDoorController" />
-				<attribute name="Class-Path" value="lib/pi4j-gpio-extension-0.0.5.jar lib/pi4j-device-0.0.5.jar lib/pi4j-core-0.0.5.jar"/>
+				<attribute name="Class-Path" value="/opt/pi4j/lib/pi4j-gpio-extension.jar /opt/pi4j/lib/pi4j-device.jar /opt/pi4j/lib/pi4j-core.jar"/>
 			</manifest>
 		</jar>
 	</target>
 
 	<target name="deploy_libraries">
-		<scp file="lib/pi4j-core-0.0.5.jar" todir="${pi.user.dev}:${pi.password.dev}@${pi.host.dev}:${pi.dirCopyTo.dev}/lib" port="${pi.port.dev}" trust="true" verbose="true" failonerror="true"></scp>
-		<scp file="lib/pi4j-device-0.0.5.jar" todir="${pi.user.dev}:${pi.password.dev}@${pi.host.dev}:${pi.dirCopyTo.dev}/lib" port="${pi.port.dev}" trust="true" verbose="true" failonerror="true"></scp>
-		<scp file="lib/pi4j-gpio-extension-0.0.5.jar" todir="${pi.user.dev}:${pi.password.dev}@${pi.host.dev}:${pi.dirCopyTo.dev}/lib" port="${pi.port.dev}" trust="true" verbose="true" failonerror="true"></scp>
+		<scp file="lib/pi4j-core.jar" todir="${pi.user.dev}:${pi.password.dev}@${pi.host.dev}:${pi.dirCopyTo.dev}/lib" port="${pi.port.dev}" trust="true" verbose="true" failonerror="true"></scp>
+		<scp file="lib/pi4j-device.jar" todir="${pi.user.dev}:${pi.password.dev}@${pi.host.dev}:${pi.dirCopyTo.dev}/lib" port="${pi.port.dev}" trust="true" verbose="true" failonerror="true"></scp>
+		<scp file="lib/pi4j-gpio-extension.jar" todir="${pi.user.dev}:${pi.password.dev}@${pi.host.dev}:${pi.dirCopyTo.dev}/lib" port="${pi.port.dev}" trust="true" verbose="true" failonerror="true"></scp>
 		<scp file="lib/guava-18.0.jar" todir="${pi.user.dev}:${pi.password.dev}@${pi.host.dev}:${pi.dirCopyTo.dev}/lib" port="${pi.port.dev}" trust="true" verbose="true" failonerror="true"></scp>
 	</target>
 
