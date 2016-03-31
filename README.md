@@ -36,9 +36,8 @@ sudo cp Adafruit_DHT /usr/bin<br>
 
 There are multiple configurable properties that can be set at runtime:<br>
 log.location: Path to the file to log information about opener status, actions, etc.<br>
-status.path: URL to get status from (default is "/Status")<br>
+status.path: URL to get status from (default is "/Status2")<br>
 close.path: URL to close garage door (default is "/Close")<br>
-weather.path: URL to get temperature from (default is "/Weather")<br>
 open.path: URL to open garage door (default is "/Open")<br>
 close.delay: Number of milliseconds before closing the door once it's detected open (default is 10 minutes)<br>
 triggerDelay: How long to leave the switch active before turning off (how long you press the physical button) (default is 400ms)<br>

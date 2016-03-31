@@ -42,10 +42,10 @@ public class DHT22Sensor
 		if (aNow - myLastCheck > kPollingInterval)
 		{
 			String aValues = readValues();
-			myLogger.warning("Values read: " + aValues);
+			myLogger.config("Values read: " + aValues);
 			if (aValues != null && aValues.indexOf('%') > 0)
 			{
-				myLogger.warning("Updating values.");
+				myLogger.config("Updating values.");
 				myLastValue = aValues;
 			}
 			myLastCheck = aNow;
@@ -82,16 +82,16 @@ public class DHT22Sensor
 		String aResult = "";
 		try
 		{
-			myLogger.warning("Reading value from sensor");
+			myLogger.config("Reading value from sensor");
 			Process aProcess = Runtime.getRuntime().exec(String.format("Adafruit_DHT 22 %d", myPin));
 			BufferedReader aReader = new BufferedReader(new InputStreamReader(aProcess.getInputStream()));
 			String aLine = null;
 			while ((aLine = aReader.readLine()) != null)
 			{
-				myLogger.warning("reading line: " + aLine);
+				myLogger.config("reading line: " + aLine);
 				aResult += aLine;
 			}
-			myLogger.warning("done reading value from sensor...");
+			myLogger.config("done reading value from sensor...");
 		}
 		catch (Exception theException)
 		{
